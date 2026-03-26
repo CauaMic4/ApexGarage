@@ -1,0 +1,6 @@
+@ApexGarage_HostAddress = http://localhost:5270
+
+GET {{ApexGarage_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
