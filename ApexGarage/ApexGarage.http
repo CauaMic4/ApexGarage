@@ -1,6 +1,192 @@
-@ApexGarage_HostAddress = http://localhost:5270
+### ApexGarage API — Functional Endpoint Examples
+### Base URL: https://localhost:5001
 
-GET {{ApexGarage_HostAddress}}/weatherforecast/
-Accept: application/json
+## ============================
+## 1. AUTH — Register Customer
+## ============================
+
+POST https://localhost:5001/api/auth/register
+Content-Type: application/json
+
+{
+  "fullName": "João Silva",
+  "email": "joao@example.com",
+  "phone": "+55 11 99999-0001",
+  "address": "Rua das Motos, 100 - São Paulo",
+  "password": "Senha123",
+  "confirmPassword": "Senha123"
+}
+
+###
+
+## ============================
+## 2. AUTH — Login
+## ============================
+
+POST https://localhost:5001/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "joao@example.com",
+  "password": "Senha123"
+}
+
+###
+
+## ============================
+## 3. AUTH — Register Admin (requires Admin JWT)
+## ============================
+
+POST https://localhost:5001/api/auth/register-admin
+Content-Type: application/json
+Authorization: Bearer {{admin_token}}
+
+{
+  "fullName": "Admin Master",
+  "email": "admin@apexgarage.com",
+  "phone": "+55 11 99999-0000",
+  "password": "Admin123",
+  "confirmPassword": "Admin123"
+}
+
+###
+
+## ============================
+## 4. CUSTOMERS — Get All (Admin only)
+## ============================
+
+GET https://localhost:5001/api/customers
+Authorization: Bearer {{admin_token}}
+
+###
+
+## ============================
+## 5. CUSTOMERS — Get Own Profile (Customer)
+## ============================
+
+GET https://localhost:5001/api/customers/{{customer_id}}
+Authorization: Bearer {{customer_token}}
+
+###
+
+## ============================
+## 6. CUSTOMERS — Update Own Profile (Customer)
+## ============================
+
+PUT https://localhost:5001/api/customers/{{customer_id}}
+Content-Type: application/json
+Authorization: Bearer {{customer_token}}
+
+{
+  "fullName": "João Silva Junior",
+  "email": "joao@example.com",
+  "phone": "+55 11 99999-0002",
+  "address": "Rua Nova, 200 - São Paulo"
+}
+
+###
+
+## ============================
+## 7. VEHICLES — Create (Customer creates own)
+## ============================
+
+POST https://localhost:5001/api/vehicles
+Content-Type: application/json
+Authorization: Bearer {{customer_token}}
+
+{
+  "customerId": "{{customer_id}}",
+  "brand": "Honda",
+  "model": "CB 500X",
+  "year": 2024,
+  "licensePlate": "ABC-1234",
+  "mileage": 5200
+}
+
+###
+
+## ============================
+## 8. VEHICLES — Get All (Customer sees own only)
+## ============================
+
+GET https://localhost:5001/api/vehicles
+Authorization: Bearer {{customer_token}}
+
+###
+
+## ============================
+## 9. INVENTORY — Create Part (Admin only)
+## ============================
+
+POST https://localhost:5001/api/inventory
+Content-Type: application/json
+Authorization: Bearer {{admin_token}}
+
+{
+  "name": "Brake Pad Set",
+  "description": "Front brake pads for sport bikes",
+  "partNumber": "BP-SPORT-001",
+  "quantity": 50,
+  "unitPrice": 89.90,
+  "category": "Brakes"
+}
+
+###
+
+## ============================
+## 10. MECHANICS — Create (Admin only)
+## ============================
+
+POST https://localhost:5001/api/mechanics
+Content-Type: application/json
+Authorization: Bearer {{admin_token}}
+
+{
+  "fullName": "Carlos Mecânico",
+  "specialty": "Engine",
+  "phone": "+55 11 98888-0001",
+  "isActive": true
+}
+
+###
+
+## ============================
+## 11. ORDERS — Create Service Order (Admin only)
+## ============================
+
+POST https://localhost:5001/api/orders
+Content-Type: application/json
+Authorization: Bearer {{admin_token}}
+
+{
+  "customerId": "{{customer_id}}",
+  "vehicleId": "{{vehicle_id}}",
+  "mechanicId": "{{mechanic_id}}",
+  "items": [
+    {
+      "inventoryItemId": "{{inventory_item_id}}",
+      "quantity": 2
+    }
+  ],
+  "notes": "Front brake replacement"
+}
+
+###
+
+## ============================
+## 12. ORDERS — Update Status (Admin only)
+## ============================
+
+PATCH https://localhost:5001/api/orders/{{order_id}}/status?status=InProgress
+Authorization: Bearer {{admin_token}}
+
+###
+
+## ============================
+## 13. ORDERS — Get All (Customer sees own only)
+## ============================
+
+GET https://localhost:5001/api/orders
+Authorization: Bearer {{customer_token}}
 
 ###
